@@ -17,7 +17,7 @@ class HizlandirilmisPiKamera:
         self.suAnkiKare = None
 
     def veriOkumayaBasla(self):
-,
+
         Thread(target=self.verileriGuncelle, args=()).start()
         return self
 
