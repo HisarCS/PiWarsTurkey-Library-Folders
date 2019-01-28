@@ -1,0 +1,6 @@
+README.md
+setup.py
+PiWarsTurkiyeRobotKiti2019.egg-info/PKG-INFO
+PiWarsTurkiyeRobotKiti2019.egg-info/SOURCES.txt
+PiWarsTurkiyeRobotKiti2019.egg-info/dependency_links.txt
+PiWarsTurkiyeRobotKiti2019.egg-info/top_level.txt
