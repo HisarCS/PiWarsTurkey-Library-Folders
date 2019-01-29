@@ -12,9 +12,8 @@ import time
 
 class Servo:
 
-    def __init__(self):
-        GPIO.setmode(GPIO.BOARD)
-        pin = 35
+    def __init__(self, pin=35, GPIOSetup = GPIO.BOARD):
+        GPIO.setmode(GPIOSetup)
 
         GPIO.setup(pin, GPIO.OUT)
         self.pwm = GPIO.PWM(pin, 50)
@@ -30,9 +29,11 @@ class Servo:
 
     def surekliDonmeyeAyarla(self):
         self.continous = True
+        GPIO.output(self.pin, True)
 
     def tekDonmeyeAyarla(self):
         self.continous = False
+        GPIO.output(self.pin, False)
 
     def __aciAyarlaAsil__(self):
         duty = self.desiredAngle / 18 + 2
@@ -54,7 +55,6 @@ class Servo:
 
     def aciAyarla(self, aci):
         if self.continous:
-            GPIO.output(self.pin, True)
             self.surekliDondurAsil(aci)
         elif self.gotSleep and (self.currentAngle is not aci):
             self.gotSleep = False
