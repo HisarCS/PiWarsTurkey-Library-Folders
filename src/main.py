@@ -9,10 +9,10 @@ from picamera.array import PiRGBArray
 import cv2
 import time
 
+
 class Servo:
 
     def __init__(self):
-
         GPIO.setmode(GPIO.BOARD)
         pin = 35
 
@@ -24,66 +24,69 @@ class Servo:
         self.currentAngle = 90
         self.setState = False
         self.gotSleep = True
+        self.continous = False
 
         print("const. calisti")
 
+    def surekliDonmeyeAyarla(self):
+        self.continous = True
 
+    def tekDonmeyeAyarla(self):
+        self.continous = False
 
-    def aciAyarlaAsil(self):
-
-        
+    def __aciAyarlaAsil__(self):
         duty = self.desiredAngle / 18 + 2
         GPIO.output(self.pin, True)
         self.pwm.ChangeDutyCycle(duty)
         deltaAngle = abs(self.desiredAngle - self.currentAngle)
-        sleepNeeeded = deltaAngle/270
-        
-        print(sleepNeeeded)
+        sleepNeeded = deltaAngle / 270
+
+        print(sleepNeeded)
         sleep(deltaAngle / 150)  # experimental value
         self.gotSleep = True
         GPIO.output(self.pin, False)
         self.pwm.ChangeDutyCycle(0)
         self.currentAngle = self.desiredAngle
 
+    def surekliDondurAsil(self, aci):
+        duty = ((rx + 1) * 90) / 18 + 2
+        self.pwm.ChangeDutyCycle(duty)
 
     def aciAyarla(self, aci):
-        
-        if self.gotSleep and (self.currentAngle is not aci):
+        if self.continous:
+            GPIO.output(self.pin, True)
+            self.surekliDondurAsil(aci)
+        elif self.gotSleep and (self.currentAngle is not aci):
             self.gotSleep = False
             self.desiredAngle = aci
 
             Thread(target=self.aciAyarlaAsil, args=()).start()
 
 
-
 class UltrasonikSensor:
 
-  def __init__(self, echo, trig):
-      
-    self.echo = echo
-    self.trig = trig
+    def __init__(self, echo, trig):
+        self.echo = echo
+        self.trig = trig
 
-    GPIO.setup(self.trig,GPIO.OUT)
-    GPIO.setup(self.echo,GPIO.IN)
+        GPIO.setup(self.trig, GPIO.OUT)
+        GPIO.setup(self.echo, GPIO.IN)
 
-    GPIO.output(trig, False)
+        GPIO.output(trig, False)
 
-
-  def mesafeOlc(self):
-
-    GPIO.output(self.trig, True)
-    sleep(0.0000001)
-
-    sinyal_baslangic = time()
-
-    while GPIO.input(self.echo):
+    def mesafeOlc(self):
+        GPIO.output(self.trig, True)
         sleep(0.0000001)
-        sinyal_bitis = time()
 
-        sure = sinyal_bitis - sinyal_baslangic
+        sinyal_baslangic = time()
 
-    return sure * 17150
+        while GPIO.input(self.echo):
+            sleep(0.0000001)
+            sinyal_bitis = time()
 
+            sure = sinyal_bitis - sinyal_baslangic
+
+        return sure * 17150
 
 
 class Motorlar:
@@ -97,13 +100,11 @@ class Motorlar:
         self.hizSag = hizSag
         self.hizSol = hizSol
 
-        480 if hizSag>480 else hizSag
+        480 if hizSag > 480 else hizSag
         -480 if hizSag < -480 else hizSag
 
         480 if hizSol > 480 else hizSol
         -480 if hizSol < -480 else hizSol
-
-
 
         motors.setSpeeds(hizSag, hizSol)
 
@@ -120,7 +121,6 @@ class Motorlar:
                 return (int)((-y - x) * 480)
 
 
-
 class Kumanda:
 
     def __init__(self):
@@ -133,7 +133,6 @@ class Kumanda:
 
         self.j = pygame.joystick.Joystick(0)
         self.j.init()
-
 
         self.buttons = []
         self.lx = 0
@@ -167,14 +166,15 @@ class Kumanda:
 
     def solVerileriOku(self):
         return self.lx, self.ly
+
     def sagVerileriOku(self):
         return self.rx, self.ry
+
     def butonlariOku(self):
         return self.buttons
 
     def verileriOku(self):
         return self.solVerileriOku(), self.sagVerileriOku(), self.butonlariOku()
-
 
 
 class HizliPiCamera:
@@ -196,7 +196,6 @@ class HizliPiCamera:
     def update(self):
 
         for f in self.yayin:
-
             self.suAnkiKare = f.array
             self.hamKare.truncate(0)
 
@@ -219,7 +218,8 @@ class HizliPiCamera:
                 break
 
 
-#deneme = Servo()
+deneme = Servo()
+deneme.surekliDonmeyeAyarla()
 
 kumanda = Kumanda()
 
@@ -235,34 +235,19 @@ motorlar = Motorlar()
 #
 # Kamera.showImage()
 
-GPIO.setmode(GPIO.BOARD)
-GPIO.setup(35, GPIO.OUT)
-pwm = GPIO.PWM(35, 50)
-pwm.start(0)
-
-GPIO.output(35, True)
-
 while True:
-
     lx, ly = kumanda.solVerileriOku()
     rx, ry = kumanda.sagVerileriOku()
     buttons = kumanda.butonlariOku()
 
-    print((rx +1)* 90)
-    
-    pin = 35
+    print((rx + 1) * 90)
+    deneme.aciAyarla((rx + 1) * 90)
 
-    
-    
-    duty = ((rx +1)* 90) / 18 + 2
-    
-    pwm.ChangeDutyCycle(duty)
 
-    #if(14 in buttons):
+    # if(14 in buttons):
     #    print("aci ayarlaniyor to 150")
     #    deneme.aciAyarla(150)
-    #else:
+    # else:
     #    deneme.aciAyarla(30)
     #    print("aci ayarlaniyor to 30")
-
     motorlar.hizlariAyarla(motorlar.kumandaVerisiniMotorVerilerineCevirme(lx, -ly, True), motorlar.kumandaVerisiniMotorVerilerineCevirme(lx, -ly, False))
