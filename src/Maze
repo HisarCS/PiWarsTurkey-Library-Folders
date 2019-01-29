@@ -28,18 +28,17 @@ class Servo:
         print("const. calisti")
 
 
-
     def aciAyarlaAsil(self):
 
-        
+
         duty = self.desiredAngle / 18 + 2
         GPIO.output(self.pin, True)
         self.pwm.ChangeDutyCycle(duty)
         deltaAngle = abs(self.desiredAngle - self.currentAngle)
         sleepNeeeded = deltaAngle/270
-        
+        self.gotSleep = False
         print(sleepNeeeded)
-        sleep(deltaAngle / 150)  # experimental value
+        sleep(deltaAngle / 270)  # experimental value
         self.gotSleep = True
         GPIO.output(self.pin, False)
         self.pwm.ChangeDutyCycle(0)
@@ -48,8 +47,7 @@ class Servo:
 
     def aciAyarla(self, aci):
         
-        if self.gotSleep and (self.currentAngle is not aci):
-            self.gotSleep = False
+        if self.gotSleep:
             self.desiredAngle = aci
 
             Thread(target=self.aciAyarlaAsil, args=()).start()
@@ -218,51 +216,21 @@ class HizliPiCamera:
                 cv2.destroyAllWindows()
                 break
 
-
-#deneme = Servo()
-
 kumanda = Kumanda()
-
-kumanda.dinlemeyeBasla()
-
+cam = HizliPiCamera()
 motorlar = Motorlar()
 
-# Kamera = HizliPiCamera()
-#
-# Kamera.start()
-#
-# time.sleep(1)
-#
-# Kamera.showImage()
+cam.start()
 
-GPIO.setmode(GPIO.BOARD)
-GPIO.setup(35, GPIO.OUT)
-pwm = GPIO.PWM(35, 50)
-pwm.start(0)
+time.sleep(1)
 
-GPIO.output(35, True)
+cam.showImage()
+kumanda.dinlemeyeBasla()
+print("kldnl")
 
 while True:
-
-    lx, ly = kumanda.solVerileriOku()
-    rx, ry = kumanda.sagVerileriOku()
-    buttons = kumanda.butonlariOku()
-
-    print((rx +1)* 90)
-    
-    pin = 35
-
-    
-    
-    duty = ((rx +1)* 90) / 18 + 2
-    
-    pwm.ChangeDutyCycle(duty)
-
-    #if(14 in buttons):
-    #    print("aci ayarlaniyor to 150")
-    #    deneme.aciAyarla(150)
-    #else:
-    #    deneme.aciAyarla(30)
-    #    print("aci ayarlaniyor to 30")
-
-    motorlar.hizlariAyarla(motorlar.kumandaVerisiniMotorVerilerineCevirme(lx, -ly, True), motorlar.kumandaVerisiniMotorVerilerineCevirme(lx, -ly, False))
+	
+	lx, ly = kumanda.solVerileriOku()
+	print(lx, ly)
+	motorlar.hizlariAyarla(motorlar.kumandaVerisiniMotorVerilerineCevirme(lx, -ly, True), motorlar.kumandaVerisiniMotorVerilerineCevirme(lx, -ly, False))
+	
