@@ -7,7 +7,7 @@ This python library was created for the purposes of easing the understanding bet
 
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install PiWarsTurkiyeRobotKiti2019.
 
-```bash
+```bash 
 sudo pip install PiWarsTurkiyeRobotKiti2019
 ```
 
