@@ -18,7 +18,8 @@ setup(
         'picamera',
         'pygame',
         'pololu_drv8835_rpi',
-        'RPi.GPIO'
+        'RPi.GPIO',
+        'wiringpi'
     ]
 
 
