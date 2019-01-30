@@ -1,5 +1,5 @@
 
-__version__ = "0.9.5"
+__version__ = "0.9.6"
 
 from .Kumanda import Kumanda
 from .ServoKontrol import ServoKontrol
