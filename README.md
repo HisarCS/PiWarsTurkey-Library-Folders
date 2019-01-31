@@ -1,3 +1,6 @@
+[English](README.md#L4)
+[Türkçe](README.md#282)
+
 # PiWars Turkey 2019: Python library for the distributed robot kits by HisarCS
 
 This python library was created for the purposes of easing the understanding between software, sensors, and movables on the robot kits designed by HisarCS for attendees of Pi Wars Turkey 2019.
@@ -251,13 +254,13 @@ In this case, the servo is set to non-continuous. A while loop is used to set th
 
 UltrasonikSensoru
 -
-- Methods -
+- Methods 
 ```python
 mesafeOlc()
 ```
 Returns the distance measured by the ultrasonic sensor
 
-- Example Usage -
+- Example Usage
 ```python
 ultra = PiWarsTurkiyeRobotKiti2019.UltrasonikSensoru(38, 40)
 
@@ -273,4 +276,281 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 Please make sure to update tests as appropriate.
 
 ## License
+[MIT](https://choosealicense.com/licenses/mit/)
+##
+
+## PiWars Türkiye 2019: HisarCS tarafından dağıtılan robot kitleri için python kütüphanesi
+
+Bu python kütüphanesi, PiWars Türkiye 2019 katılımcılarının HisarCS tarafınndan hazırlanan robot kitlerindeki yazılımı, sensörleri ve hareketli parçaları kullanmalarını kolaylaştırmak amacıyla yapılmıştır.
+
+
+## Kurulum
+
+PiWarsTurkiyeRobotKiti2019'u indirmek için [pip](https://pip.pypa.io/en/stable/) paketleme yöneticisini kullanın.
+
+```bash 
+sudo pip install PiWarsTurkiyeRobotKiti2019
+```
+
+Alternatif olarak Github'dan indirmek de mümkün.
+```bash 
+git clone https://github.com/HisarCS/PiWarsTurkey-Library-Folders.git
+cd PiWarsTurkey-Library-Folders
+sudo python setup.py install
+```
+
+## Kullanım
+
+```python
+import PiWarsTurkiyeRobotKiti2019
+```
+## Belgeleme
+
+Şu anda bu kütüphane 5 sınıf bulundurmaktadır:
+- HizlandirilmisPiKamera (Pi Kamera ve opencv kullanmayı basitleştirmek ve optimize etmek için)
+- Kumanda (pygame'in Joystick sınıfını PS3 sixaxis kumandalar ile kullanmayı basitleştirmek için)
+- MotorKontrol (Raspberry Pi için Pololu DRV8835 motor sürücü devresinin kullanımını kolaylaştırmak için)
+- ServoKontrol (Raspberry Pi'ın GPIO pinleri ile servo kontrol etmeyi kolaylaştırmak için)
+- UltrasonikSensoru (Raspberry Pi'ın GPIO pinleri ile HC-SR04 ultrasonik uzaklık sensörünü kullanmayı kolaylaştırmak için)
+
+Performans sebeplerinden dolayı sınıfların bir kısmı multithreading kullanmaktadır. Bu yazılımın bir kısmının diğerlerinin performansını değiştirmesini engellemek içindir. Multithreading özellikle kullanıldığı sınıflar HizlandirilmisPiKamera (hem görüntüyü almak hem göstermek için), Kumanda (sürekli olarak kumanda değerlerini almak için) ve ServoKontrol (içindeki sleep fonksiyonlarının ana threadi durdurmasını engellemek için).
+
+HizlandirilmisPiKamera:
+-
+- Metodlar
+```python
+veriGuncelle()
+```
+Pi Kameradan gelen verileri günceller.
+
+```python
+veriOkumayaBasla()
+```
+Ana threadi yavaşlatmadan veriyi güncellemek için yeni bir threadde ``` veriGuncelle()``` fonksiyonunu çağırır.
+
+```python
+veriOku()
+```
+numpy arrayi olarak kameranın o sıradaki değerlerini geri döndürür.
+
+```python
+kareyiGostermeyiGuncelle()
+```
+Pi Kamera'nın gördüklerini (sadece görenler için)  gösteren yeni bir opencv penceresi açar ve pencereyi günceller. "q" tuşu ile pencere kapatılabilir.
+
+```python
+kareyiGoster()
+```
+Ana threadi yavaşlatmadan görsel bir pencere açmak için  ``` kareyiGostermeyiGuncelle()``` fonksiyonunu başka bir threadde çağırır.
+
+- Örnek Kullanım
+```python
+from PiWarsTurkiyeRobotKiti2019 import HizlandirilmisPiKamera
+
+camera = HizlandirilmisPiKamera()
+camera.veriOkumayaBasla()
+camera.kareyiGoster()
+```
+Yukarıdaki örnek yeni bir HizlandirilmisPiKamera objesi oluşturur ve onunla yeni bir görsel pencere oluşturur.
+
+Kamera objesi çağırılınca varsayılan çözünürlük 640x480 dir. Eğer başka bir çözünürlük istiyorsanız, örneğin 1280x720, kamera objesini bu şekilde çağırabilirsiniz:  
+ ``` camera = HizlandirilmisPiKamera(cozunurluk=(1280, 720))```
+
+Aklınızda bulundurun ki eğer daha öte görsel işleme isteniyorsa veri ``` camera.veriOkumayaBasla()``` ve ``` camera.veriOku()``` veya ``` camera.suAnkiKare``` ile alınmalıdır. ``` camera.suAnkiKare``` o anki karenin numpy array temsili iken  ``` camera.veriOku()``` fonksiyonu ``` camera.suAnkiKare``` değişkenini verir.
+
+Aşağıdaki örnek kod kameradan kareyi numpy array olarak alır, gri tonlama yapar ve kareyi **ana thread üzerinde** gösterir.
+```python
+from PiWarsTurkiyeRobotKiti2019 import HizlandirilmisPiKamera
+import cv2
+
+camera = HizlandirilmisPiKamera()
+camera.veriOkumayaBasla()
+
+while True:
+	frame = camera.veriOku()
+	gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+	cv2.imshow("gray", gray)
+```
+Buna karşılık aşağıdaki örnekte gri tonlanmış kareler **başka bir threadde** gösterilir, **ana threadde değil**. Bu kullanım performans arttırmak için tavsiye edilir. 
+```python
+from PiWarsTurkiyeRobotKiti2019 import HizlandirilmisPiKamera
+import cv2
+
+camera = HizlandirilmisPiKamera()
+camera.veriOkumayaBasla()
+camera.kareyiGoster()
+
+while True:
+	frame = camera.suAnkiKare
+	gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+	camera.suAnkiKare = gray
+```
+Kumanda
+-
+- Metodlar
+```python
+yenile()
+```
+Kumandadan alınan verileri bir while döngüsü içerisinde yeniler. Ana threadde çağırmak **tavsiye edilmez** çünkü program bu satırda takılacaktır.
+
+```python
+dinlemeyeBasla()
+```
+```python yenile()``` metodunu ayrı bir thread üzerinde çağırarak ana threadin kullanılabilmesini sağlar. 
+
+```python
+solVerileriOku()
+```
+Soldaki joystick değerlerini iki float değeri, x ve y, olarak verir.
+
+```python
+sagVerileriOku()
+```
+Sağdaki joystick değerlerini iki float değeri, x ve y, olarak verir.
+
+```python
+butonlariOku()
+```
+Basılan bütün düğmeleri sayı değeri olarak bir arrayde geri verir.
+
+```python
+verileriOku()
+```
+Kumandanın bütün değerlerini geri verir ```(python solVerileriOku(), python sagVerileriOku(), python butonlariOku())```
+
+- Örnek Kullanım
+```python
+import PiWarsTurkiyeRobotKiti2019
+
+controller = PiWarsTurkiyeRobotKiti2019.Kumanda()
+controller.dinlemeyeBasla()
+
+while True:
+  lx, ly = controller.solVerileriOku()
+  rx, ry = controller.sagVerileriOku()
+  buttons = controller.butonlariOku()
+  
+  print("The left joystick values are: ", lx, ly)
+  print("The right joystick values are: ", rx, ry)
+  
+  if(0 in buttons):
+    print("Button 0 was pressed!")
+```
+Yukarıdaki kod bir Kumanda objesi oluşturur ve sol ve sağ joysticklerin değerlerini ekrana basarken aynı zamanda belirlenmiş bir stringi bir düğmeye basıldığında ekrana basar. ```python dinlemeyeBasla()```  metodunun veri alabilmek için ana kod başlatıldığında çağırılması gerektiğini unutmayınız.
+
+MotorKontrol
+-
+- Metodlar
+```python
+hizlariAyarla(rightSpeed, leftSpeed)
+```
+ pololu-drv8835-rpi kütüphanesini kullanarak motorların hızını ayarlar. Hız -480den 480e kadar değerler olarak verilebilir (-480 geriye doğru tam hız olur). Sağ ve sol hız değerleri motor sürücüsünün birinci ve ikinci motorlarına denk gelir.
+
+```python
+kumandaVerisiniMotorVerilerineCevirme(x, y, t)
+```
+Motor hız değerlerini kumanda verisine dayanarak geri verir. x ve y, kumandanın joystick x ve y değerleri, t ise sağ motor için True, sol motor için False olan bir boolean değeridir. 
+
+- Örnek Kullanım
+```python
+import PiWarsTurkiyeRobotKiti2019
+motors = PiWarsTurkiyeRobotKiti2019.MotorKontrol()
+
+while True:
+  motors.hizlariAyarla(480, 480)
+```
+Bu kod motorları başlatır ve ileri doğru tam hıza ayarlar.
+
+- Kumanda ile Örnek Kullanım
+```python
+import PiWarsTurkiyeRobotKiti2019
+
+motors = PiWarsTurkiyeRobotKiti2019.MotorKontrol()
+
+controller = PiWarsTurkiyeRobotKiti2019.Kumanda()
+controller.dinlemeyeBasla()
+
+while True:
+  lx, ly = controller.solVerileriOku()
+  rightSpeed = motors.kumandaVerisiniMotorVerilerineCevirme(lx, -ly, True)
+  leftSpeed = motors.kumandaVerisiniMotorVerilerineCevirme(lx, -ly, False)
+  
+  motors.hizlariAyarla(rightSpeed, leftSpeed)
+```
+Yukarıdaki kod motorlar ve kumanda objelerini başlatır ve bir while döngüsünün içine girer. Döngüdeyken  ```kumandaVerisiniMotorVerilerineCevirme()``` metodu motorların hız değerlerini bulmak için kullanılır. y değerinin negatif olması, özellikle PS3 kumandalarında joystickteki ileri yönünün negatif değerler vermesinden dolayıdır.
+
+ServoKontrol
+-
+- Metodlar
+```python
+surekliDonmeyeAyarla()
+tekDonmeyeAyarla()
+```
+Servoyu sürekli dönme ve tek sefer dönmeye ayarlar. Sürekli dönme modu dinamik olarak değerler verilmesini gerektirirken tek dönme servoyu verilen açıya getirir.
+
+```python
+aciAyarla(angle)
+```
+Servoyu derece cinsinden verilen açıya çevirir. Servo tek dönmeye ayarlıyken sleep fonksiyonları ve ayrı bir thread oluşturur.
+
+- Örnek Kullanım
+Sürekli Dönme:
+```python
+servo = PiWarsTurkiyeRobotKiti2019.ServoKontrol()
+servo.surekliDonmeyeAyarla()
+
+angle = 0
+add = 0
+while True:
+  servo.aciAyarla(angle)
+  
+  if(angle == 180):
+    add = -1
+  elif(angle == 0):
+    add = 1
+  angle += add
+  sleep(0.01)
+```
+Bu durumda servo sürekli dönmeye ayarlıdır. Bir while döngüsü servonun açısını 1er 1er arttırır ve servoyu yeni açıya getirir. 
+
+Tek Dönme:
+```python
+import PiWarsTurkiyeRobotKiti2019
+from time import sleep
+
+servo = PiWarsTurkiyeRobotKiti2019.ServoKontrol()
+servo.tekDonmeyeAyarla()
+
+while True:
+  servo.aciAyarla(180)
+  sleep(1)
+  servo.aciAyarla(0)
+  sleep(1)
+```
+Bu durumda servo tek dönmeye ayarlıdır. Bir while döngüsü servonun açısını 1 saniye aralıklarla 180 ve 0 arasında değiştirir.
+
+UltrasonikSensoru
+-
+- Metodlar
+```python
+mesafeOlc()
+```
+Ultrasonik sensörün ölçtüğü mesafeyi geri verir.
+
+- Örnek Kullanım
+```python
+ultra = PiWarsTurkiyeRobotKiti2019.UltrasonikSensoru(38, 40)
+
+while True:
+  print(ultra.mesafeOlc())
+```
+Yukarıdaki kod ölçülen mesafeyi ekrana basar. Yapıcının içindeki değerler ultrasonik sensörün takıı olduğu pinlerdir.
+
+
+## Katkıda Bulunma
+Çekme istekleri kabul edilir. Büyük değişikler için lütfen önce bir issue açarak istediğiniz değişikliği anlatın.
+
+Lütfen testleri uygun şekilde güncellediğinizden emin olun.
+
+## Lisans
 [MIT](https://choosealicense.com/licenses/mit/)
