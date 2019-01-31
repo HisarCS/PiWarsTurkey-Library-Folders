@@ -26,11 +26,13 @@ import PiWarsTurkiyeRobotKiti2019
 ## Documentation
 
 The library includes 5 classes as of now these are:
-- HizlandirilmisPiKamera (for a simplified and fast way to use the Pi Camera and opencv)
+- HizlandirilmisPiKamera (for a simplified and optimized way to use the Pi Camera and OpenCV)
 - Kumanda (for an easy way to use the pygame Joystick class with the sixaxis PS3 controller)
 - MotorKontrol (for an easy way to use the Pololu DRV8835 motor control circuit for the Raspberry Pi with a controller)
 - ServoKontrol (for a simple way to use servo motors on the Raspberry Pi using GPIO pins)
 - UltrasonikSensoru (for an easy way to use HC-SR04 ultrasonic distance sensors on the Raspberry Pi)
+
+For the purposes of performance, some of the classes include multithtreading. This prevents some parts of the code to not have an effect on other parts of the code. Multithreading was especially implemented to HizlandirilmisPiKamera(for both grabbing and showing the frames), Kumanda(to get the controller values continuously), ServoKontrol(to prevent any sleep function in the class to affect the main thread).
 
 HizlandirilmisPiKamera:
 -
@@ -43,12 +45,12 @@ Updates the data obtained from the Pi Camera.
 ```python
 veriOkumayaBasla()
 ```
-Creates a new Thread to call ```python veriGuncelle()``` in order to update the data without slowing down the main thread.
+Creates a new Thread to call ``` veriGuncelle()``` in order to update the data without slowing down the main thread.
 
 ```python
 veriOku()
 ```
-Returns the current data of the camera as a numPy array.
+Returns the current data of the camera as a numpy array.
 
 ```python
 kareyiGostermeyiGuncelle()
@@ -58,30 +60,62 @@ Creates and updates the opencv window that shows the image the Pi Camera is seei
 ```python
 kareyiGoster()
 ```
-Calls ```python kareyiGostermeyiGuncelle()``` in a new Thread to create a visual window without slowing down the main thread.
+Calls ``` kareyiGostermeyiGuncelle()``` in a new Thread to create a visual window without slowing down the main thread.
 
 - Example Usage -
 ```python
-import piwarsturkiyerobotkiti2019
+from PiWarsTurkiyeRobotKiti2019 import HizlandirilmisPiKamera
 
-camera = piwarsturkiyerobotkiti2019.HizlandirilmisPiKamera()
+camera = HizlandirilmisPiKamera()
 camera.veriOkumayaBasla()
 camera.kareyiGoster()
 ```
-The above example creates a new HizlandirilmisPiKamera object and uses it to show the image the camera is seeing until the "q" key is pressed. Keep in mind that the data has to be received using either ```python camera.veriOkumayaBasla()```or ```python camera.veriGuncelle()``` , depending on if you want to use it on the main thread or a separate thread, in order for it to be shown on a window.
+The above example creates a new HizlandirilmisPiKamera object and uses it to show the image the camera is seeing until the "q" key is pressed.  
 
+The default resolution of 640x480 for camera is set when the constructor is called. If you want a different resolution settings, for instance 1280x720 ,then set the camera object as follows:
+ ``` camera = HizlandirilmisPiKamera(cozunurluk=(1280, 720))```
+
+Keep in mind that the data has to be received using  ``` camera.veriOkumayaBasla()``` with ``` camera.veriOku()```  or  ``` camera.suAnkiKare``` , if further vision processing is wanted. ``` camera.suAnkiKare``` is the current frame variable in numpy array, where the function ``` camera.veriOku()```  returns variable ``` camera.suAnkiKare```. 
+
+The below example code will grab the frame from the camera in numpy array format, grayscale it, and display the frames in the **main thread**.
+```python
+from PiWarsTurkiyeRobotKiti2019 import HizlandirilmisPiKamera
+import cv2
+
+camera = HizlandirilmisPiKamera()
+camera.veriOkumayaBasla()
+
+while True:
+	frame = camera.veriOku()
+	gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+	cv2.imshow("gray", gray)
+```
+Wheras in the example below, the grayscaled frames are both grabbed and displayed in **different threads**, **not in the main thread**. This method is strongly encouraged to increase the performance as much as possible.
+```python
+from PiWarsTurkiyeRobotKiti2019 import HizlandirilmisPiKamera
+import cv2
+
+camera = HizlandirilmisPiKamera()
+camera.veriOkumayaBasla()
+camera.kareyiGoster()
+
+while True:
+	frame = camera.suAnkiKare
+	gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+	camera.suAnkiKare = gray
+```
 Kumanda
 -
 - Methods -
 ```python
 yenile()
 ```
-Refreshes the values obtained from the controller inside a while loop.
+Refreshes the values obtained from the controller inside a while loop. **Not recommended** to call in the main thread since the program will stuck in this method.
 
 ```python
 dinlemeyeBasla()
 ```
-Calls ```python yenile()``` on another Thread. If ```python yenile()``` is called on the main thread, the code will be stuck on the while loop inside the function. This is not recommended.
+Calls ```python yenile()``` in a new thread. Allowing the while loop of the main thread to be faster. 
 
 ```python
 solVerileriOku()
@@ -101,11 +135,13 @@ Returns an array of the numerical values of all the buttons pressed.
 ```python
 verileriOku()
 ```
-Returns all values of the controller (```python solVerileriOku()```, ```python sagVerileriOku()```, ```python butonlariOku()```)
+Returns all values of the controller ```(python solVerileriOku(), python sagVerileriOku(), python butonlariOku())```
 
 - Example Usage -
 ```python
-controller = piwarsturkiyerobotkiti2019.Kumanda()
+import PiWarsTurkiyeRobotKiti2019
+
+controller = PiWarsTurkiyeRobotKiti2019.Kumanda()
 controller.dinlemeyeBasla()
 
 while True:
@@ -119,7 +155,7 @@ while True:
   if(0 in buttons):
     print("Button 0 was pressed!")
 ```
-The above code initializes a Kumanda object and prints the values from the left and right joysticks, as well as a set string when a button is pressed. Keep in mind that ```python dinlemeyeBasla()``` has to be called or else the data won't be read from the controller.
+The above code initializes a Kumanda object and prints the values from the left and right joysticks, as well as a set string when a button is pressed. Keep in mind that ```python dinlemeyeBasla()``` has to be called once when the main code is executed, or the data won't be read from the controller.
 
 MotorKontrol
 -
@@ -136,7 +172,8 @@ Returns the speed for the motor according to the values of a joystick from the c
 
 - Example Usage -
 ```python
-motors = piwarsturkiyerobotkiti2019.MotorKontrol()
+import PiWarsTurkiyeRobotKiti2019
+motors = PiWarsTurkiyeRobotKiti2019.MotorKontrol()
 
 while True:
   motors.hizlariAyarla(480, 480)
@@ -145,9 +182,11 @@ This code initializes motors and sets both of them to max speed.
 
 - Example Usage w/ Controller -
 ```python
-motors = piwarsturkiyerobotkiti2019.MotorKontrol()
+import PiWarsTurkiyeRobotKiti2019
 
-controller = piwarsturkiyerobotkiti2019.Kumanda()
+motors = PiWarsTurkiyeRobotKiti2019.MotorKontrol()
+
+controller = PiWarsTurkiyeRobotKiti2019.Kumanda()
 controller.dinlemeyeBasla()
 
 while True:
@@ -157,7 +196,7 @@ while True:
   
   motors.hizlariAyarla(rightSpeed, leftSpeed)
 ```
-The above code initializes the motors and the controller and goes into a while loop. Inside the loop, the ```python kumandaVerisiniMotorVerilerineCevirme()```function is used to get the speed values for the motors. The y value is set to negative because on PS3 controllers sepicifically forwards on the joystick returns negative values. 
+The above code initializes the motors and the controller and goes into a while loop. Inside the loop, the ```kumandaVerisiniMotorVerilerineCevirme()```function is used to get the speed values for the motors. The y value is set to negative because on PS3 controllers sepicifically forwards on the joystick returns negative values. 
 
 ServoKontrol
 -
@@ -166,7 +205,7 @@ ServoKontrol
 surekliDonmeyeAyarla()
 tekDonmeyeAyarla()
 ```
-Switches the servo from continous and not continuous respectively. Continuous requires constant values to be provided while not continuous turns the servo between provided angles.
+Switches the servo from continous and not continuous respectively. Continuous requires dynamic values to be provided while not continuous turns the servo between provided angles.
 
 ```python
 aciAyarla(angle)
@@ -176,7 +215,7 @@ Turns the servo to the provided angle in degrees. Provides a sleep statement and
 - Example Usage -
 Continuous:
 ```python
-servo = piwarsturkiyerobotkiti2019.ServoKontrol()
+servo = PiWarsTurkiyeRobotKiti2019.ServoKontrol()
 servo.surekliDonmeyeAyarla()
 
 angle = 0
@@ -189,8 +228,26 @@ while True:
   elif(angle == 0):
     add = 1
   angle += add
+  sleep(0.01)
 ```
 In this case, the servo is set to continuous. A while loop is used to constantly change the angle of the servo by 1 and set the new angle.
+
+- Example Usage -
+Non-Continuous:
+```python
+import PiWarsTurkiyeRobotKiti2019
+from time import sleep
+
+servo = PiWarsTurkiyeRobotKiti2019.ServoKontrol()
+servo.tekDonmeyeAyarla()
+
+while True:
+  servo.aciAyarla(180)
+  sleep(1)
+  servo.aciAyarla(0)
+  sleep(1)
+```
+In this case, the servo is set to non-continuous. A while loop is used to set the angle of servo with one minute sleeps
 
 UltrasonikSensoru
 -
@@ -202,7 +259,7 @@ Returns the distance measured by the ultrasonic sensor
 
 - Example Usage -
 ```python
-ultra = piwarsturkiyerobotkiti2019.UltrasonikSensoru(38, 40)
+ultra = PiWarsTurkiyeRobotKiti2019.UltrasonikSensoru(38, 40)
 
 while True:
   print(ultra.mesafeOlc())
