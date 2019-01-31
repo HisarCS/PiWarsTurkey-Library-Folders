@@ -1,5 +1,3 @@
-[English](README.md#L4)
-[Türkçe](README.md#282)
 
 # PiWars Turkey 2019: Python library for the distributed robot kits by HisarCS
 
