@@ -38,7 +38,7 @@ class MotorKontrol:
 
     def differentialDrive(self, x, y):
         if(x == 0 and y == 0):
-		return (0, 0)
+	    return (0, 0)
 
         z = math.sqrt(x * x + y * y)
         angle = math.acos(math.fabs(x) / z) * 180 / math.pi
