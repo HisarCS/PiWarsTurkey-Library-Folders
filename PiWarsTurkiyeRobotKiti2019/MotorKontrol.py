@@ -24,7 +24,7 @@ class MotorKontrol:
 
         motors.setSpeeds(hizSag, hizSol)
 
-    def kumandaVerisiniMotorVerilerineCevirme(self, x, y, t):
+    def kumandaVerisiniMotorVerilerineCevirme(self, x, y):
         
         r = math.hypot(x, y)
         t = math.atan2(y, x)
