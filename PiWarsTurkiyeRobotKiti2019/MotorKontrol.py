@@ -25,19 +25,7 @@ class MotorKontrol:
         motors.setSpeeds(hizSag, hizSol)
 
     def kumandaVerisiniMotorVerilerineCevirme(self, x, y, t):
-        if (t):
-            if (math.copysign(1, x) != math.copysign(1, y)):
-                return (int)((-y + x) * 240)
-            else:
-                return (int)((-y + x) * 480)
-        else:
-            if (math.copysign(1, x) == math.copysign(1, y)):
-                return (int)((-y - x) * 240)
-            else:
-                return (int)((-y - x) * 480)
-
-    def steering(self, x, y):
-        # convert to polar
+        
         r = math.hypot(x, y)
         t = math.atan2(y, x)
 
@@ -56,4 +44,4 @@ class MotorKontrol:
         left = max(-1, min(left, 1))
         right = max(-1, min(right, 1))
 
-        return left, right
+        return int(left * 480), -int(right * 480)
