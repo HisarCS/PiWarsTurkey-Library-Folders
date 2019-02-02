@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
       name = "PiWarsTurkiyeRobotKiti2019",
-      version = "0.9.5",
+      version = "0.9.6",
       author = "Yaşar İdikut, Sarp Yoel Kastro",
       author_email = "yasar.idikut@hisarschool.k12.tr, sarp.kastro@hisarschool.k12.tr",
       description = "Library that makes use of sensors, motors, and servos in the PiWars Turkey robot kit by HisarCS",
