@@ -36,38 +36,24 @@ class MotorKontrol:
             else:
                 return (int)((-y - x) * 480)
 
-    def differentialDrive(self, x, y):
-        if(x == 0 and y == 0):
-	    return (0, 0)
+    def steering(self, x, y):
+        # convert to polar
+        r = math.hypot(x, y)
+        t = math.atan2(y, x)
 
-        z = math.sqrt(x * x + y * y)
-        angle = math.acos(math.fabs(x) / z) * 180 / math.pi
+        # rotate by 45 degrees
+        t += math.pi / 4
 
-        tcoeff = -1 + (angle / 90) * 2
-        turn = tcoeff * math.fabs(math.fabs(y) - math.fabs(x))
-        turn = round(turn * 100, 0) / 100
+        # back to cartesian
+        left = r * math.cos(t)
+        right = r * math.sin(t)
 
-        mov = max(math.fabs(y), math.fabs(x))
+        # rescale the new coords
+        left = left * math.sqrt(2)
+        right = right * math.sqrt(2)
+ 
+        # clamp to -1/+1
+        left = max(-1, min(left, 1))
+        right = max(-1, min(right, 1))
 
-        if (x >= 0 and y <= 0) or (x < 0 and y > 0):
-             rawLeft = mov
-             rawRight = turn
-        else:
-             rawRight = mov
-             rawLeft = turn
-
-        if y < 0:
-            rawLeft = -rawLeft
-            rawRight = -rawRight
-
-        rightOut = map(rawRight, -1, 1, -480, 480)
-        leftOut = map(rawLeft, -1, 1, -480, 480)
-
-        return(rightOut, leftOut)
-
-    def map(v, in_min, in_max, out_min, out_max):
-        if v < in_min:
-             v = in_min
-        if v > in_max:
-            v = in_max
-        return (v - in_min) * (out_max - out_min) // (in_max - in_min) + out_min
+        return left, right
