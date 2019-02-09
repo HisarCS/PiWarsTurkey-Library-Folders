@@ -167,9 +167,9 @@ hizlariAyarla(rightSpeed, leftSpeed)
 Sets the speeds of the motors using the pololu-drv8835-rpi library. The range for the speeds are -480 to 480 where -480 is maximum speed in reverse. The right and left speeds are for motor 1 and motor 2 depending on which side they are on.
 
 ```python
-kumandaVerisiniMotorVerilerineCevirme(x, y, t)
+kumandaVerisiniMotorVerilerineCevirme(x, y)
 ```
-Returns the speed for the motor according to the values of a joystick from the controller. x and y are the x and y values of the joystick and t is a boolean value with True for the right motor and False for the left motor.
+Returns the speed for the motor according to the values of a joystick from the controller. x and y are the x and y values of the joystick. This returns a tuple with two elements representing the speed values for the right and left motors.
 
 - Example Usage -
 ```python
@@ -192,8 +192,7 @@ controller.dinlemeyeBasla()
 
 while True:
   lx, ly = controller.solVerileriOku()
-  rightSpeed = motors.kumandaVerisiniMotorVerilerineCevirme(lx, -ly, True)
-  leftSpeed = motors.kumandaVerisiniMotorVerilerineCevirme(lx, -ly, False)
+  rightSpeed, leftSpeed = motors.kumandaVerisiniMotorVerilerineCevirme(lx, ly)
   
   motors.hizlariAyarla(rightSpeed, leftSpeed)
 ```
@@ -445,9 +444,9 @@ hizlariAyarla(rightSpeed, leftSpeed)
  pololu-drv8835-rpi kütüphanesini kullanarak motorların hızını ayarlar. Hız -480den 480e kadar değerler olarak verilebilir (-480 geriye doğru tam hız olur). Sağ ve sol hız değerleri motor sürücüsünün birinci ve ikinci motorlarına denk gelir.
 
 ```python
-kumandaVerisiniMotorVerilerineCevirme(x, y, t)
+kumandaVerisiniMotorVerilerineCevirme(x, y)
 ```
-Motor hız değerlerini kumanda verisine dayanarak geri verir. x ve y, kumandanın joystick x ve y değerleri, t ise sağ motor için True, sol motor için False olan bir boolean değeridir. 
+Motor hız değerlerini kumanda verisine dayanarak geri verir. x ve y, kumandanın joystick x ve y değerlerini temsil eder. Sağ ve sol motorlarını içeren iki elemanlı bir tuple döndürür.
 
 - Örnek Kullanım
 ```python
@@ -470,8 +469,7 @@ controller.dinlemeyeBasla()
 
 while True:
   lx, ly = controller.solVerileriOku()
-  rightSpeed = motors.kumandaVerisiniMotorVerilerineCevirme(lx, -ly, True)
-  leftSpeed = motors.kumandaVerisiniMotorVerilerineCevirme(lx, -ly, False)
+  rightSpeed, leftSpeed = motors.kumandaVerisiniMotorVerilerineCevirme(lx, ly)
   
   motors.hizlariAyarla(rightSpeed, leftSpeed)
 ```
