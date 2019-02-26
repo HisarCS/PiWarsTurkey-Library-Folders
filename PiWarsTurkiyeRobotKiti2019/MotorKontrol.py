@@ -21,7 +21,6 @@ class MotorKontrol:
         -480 if hizSol < -480 else hizSol
 
 
-
         motors.setSpeeds(hizSag, hizSol)
 
     def kumandaVerisiniMotorVerilerineCevirme(self, x, y, t):

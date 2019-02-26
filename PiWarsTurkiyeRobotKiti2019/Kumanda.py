@@ -21,10 +21,10 @@ class Kumanda:
 
     def dinlemeyeBasla(self):
         
-        Thread(target=self.yenile, args=()).start()
+        Thread(target=self.__yenile__, args=()).start()
         return self
     
-    def yenile(self):
+    def __yenile__(self):
         
         while True:
             for e in pygame.event.get():

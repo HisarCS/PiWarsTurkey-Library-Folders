@@ -1,7 +1,6 @@
 from time import sleep, time
 import RPi.GPIO as GPIO
 from threading import Thread
-import time
 
 class ServoKontrol:
     
