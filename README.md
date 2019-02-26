@@ -64,6 +64,7 @@ Ana threadi yavaşlatmadan bir pencere açmak için  ``` __kareyiGostermeyiGunce
 ```python  
 from PiWarsTurkiyeRobotKiti2019 import HizlandirilmisPiKamera  
 import imutils
+from time import sleep
 
 camera = HizlandirilmisPiKamera()
 camera.veriOkumayaBasla()
@@ -83,6 +84,8 @@ Eğer ki sonradan yaptığınız görüntü işleme adımlarınızı da ayrı pe
 from PiWarsTurkiyeRobotKiti2019 import HizlandirilmisPiKamera  
 import imutils
 import cv2
+from time import sleep
+
 kamera = HizlandirilmisPiKamera()
 kamera.veriOkumayaBasla()
 sleep(1)
@@ -208,6 +211,7 @@ Servoyu derece cinsinden verilen açıya çevirir. Servo tek dönmeye ayarlıyke
 Sürekli Dönme:  
 ```python  
 import PiWarsTurkiyeRobotKiti2019  
+from time import sleep
 
 servo = PiWarsTurkiyeRobotKiti2019.ServoKontrol()  
 servo.surekliDonmeyeAyarla()  
