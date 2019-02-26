@@ -77,6 +77,7 @@ while True:
 Yukarıdaki örnek yeni bir HizlandirilmisPiKamera objesi oluşturur, ``` veriOkumayaBasla()```   fonksiyonu ile kameradan verileri almaya başlar ve while loop'un içinde de ``` kareyiGoster()```  fonksiyonu ile okunan verileri ekranda 'frame' isimli pencere oluşturup kameradan okunan ham verileri gösterir.
   
 Kamera objesi çağırılınca varsayılan çözünürlük 640x480 dir. Eğer başka bir çözünürlük istiyorsanız, örneğin 1280x720, kamera objesini bu şekilde oluşturabilirsiniz:    
+
 ``` camera = HizlandirilmisPiKamera(cozunurluk=(1280, 720))```  
   
 Eğer ki sonradan yaptığınız görüntü işleme adımlarınızı da ayrı pencerelerde göstermek istiyorsanız ```kareyiGoster()```  fonksiyonunu birkaç kez kullanarak kodunuzu yavaşlatmadan pencereleri ayrı bir thread'de çalıştırabilirsiniz. Bunun için aşağıdaki kodu referans alabilirsiniz.
