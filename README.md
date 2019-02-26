@@ -7,13 +7,14 @@ Bu python kütüphanesi, PiWars Türkiye 2019 katılımcılarının HisarCS tara
   
 PiWarsTurkiyeRobotKiti2019'u indirmek için [pip](https://pip.pypa.io/en/stable/) paketleme yöneticisini kullanın.  
   
-```bash sudo pip install PiWarsTurkiyeRobotKiti2019  
+``` 
+$ sudo pip install PiWarsTurkiyeRobotKiti2019  
 ```  
   
 Alternatif olarak Github'dan indirmek de mümkün.  
 ```bash git clone https://github.com/HisarCS/PiWarsTurkey-Library-Folders.git  
-cd PiWarsTurkey-Library-Folders  
-sudo python setup.py install  
+$ cd PiWarsTurkey-Library-Folders  
+$ sudo python setup.py install  
 ```  
   
 ## Kullanım  
