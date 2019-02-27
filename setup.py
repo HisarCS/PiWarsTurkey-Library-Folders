@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name = "PiWarsTurkiyeRobotKiti2019",
-    version = "1.1.0",
+    version = "1.1.1",
     author = "Yaşar İdikut, Sarp Yoel Kastro",
     author_email = "yasar.idikut@hisarschool.k12.tr, sarp.kastro@hisarschool.k12.tr",
     description = "Library that makes use of sensors, motors, and servos in the PiWars Turkey robot kit by HisarCS",
@@ -19,7 +19,6 @@ setup(
         'pololu_drv8835_rpi',
         'RPi.GPIO',
         'wiringpi',
-        'cv2'
     ]
 
 
