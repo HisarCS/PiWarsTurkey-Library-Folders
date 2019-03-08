@@ -188,8 +188,7 @@ joystik.dinlemeyeBasla()
   
 while True:  
 	lx, ly = joystik.solVerileriOku()  
-	sagHiz = motorlar.kumandaVerisiniMotorVerilerineCevirme(lx, ly)  
-	solHiz = motorlar.kumandaVerisiniMotorVerilerineCevirme(lx, ly)  
+	sagHiz, solHiz = motorlar.kumandaVerisiniMotorVerilerineCevirme(lx, ly)  
   
 	motorlar.hizlariAyarla(sagHiz, solHiz)  
 ```  
