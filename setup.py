@@ -15,7 +15,6 @@ setup(
     classifiers=["Development Status :: 4 - Beta"],
     install_requires=[
         'picamera',
-
         'pygame',
         'pololu_drv8835_rpi',
         'RPi.GPIO',

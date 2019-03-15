@@ -2,9 +2,7 @@
 from picamera import PiCamera
 from picamera.array import PiRGBArray
 from threading import Thread
-import imutils
 import cv2
-from time import sleep
 
 class HizlandirilmisPiKamera:
 
