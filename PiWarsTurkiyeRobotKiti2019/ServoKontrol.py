@@ -1,4 +1,4 @@
-from time import sleep, time
+from time import sleep
 import RPi.GPIO as GPIO
 from threading import Thread
 
