@@ -163,9 +163,9 @@ hizlariAyarla(sagHiz, solHiz)
 pololu-drv8835-rpi kütüphanesini kullanarak motorların hızını ayarlar. Hız -480'den +480'e kadar değerler olarak verilebilir (-480 geriye doğru tam hız olur). Sağ ve sol hız değerleri motor sürücüsünün birinci ve ikinci motorlarına denk gelir.  
   
 ```python  
-kumandaVerisiniMotorVerilerineCevirme(x, y, t)  
+kumandaVerisiniMotorVerilerineCevirme(x, y)  
 ```  
-Motor hız değerlerini kumanda verisine dayanarak geri verir. x ve y, kumandanın joystick x ve y değerleri, t ise sağ motor için True, sol motor için False olan bir boolean değeridir.   
+Motor hız değerlerini kumanda verisine dayanarak geri verir. x ve y, kumandanın joystick x ve y değerlerini temsil eder ve 0 ve 1 arasında bir değer alır.
   
 - Örnek Kullanım  
 ```python  
@@ -188,12 +188,11 @@ joystik.dinlemeyeBasla()
   
 while True:  
 	lx, ly = joystik.solVerileriOku()  
-	sagHiz = motorlar.kumandaVerisiniMotorVerilerineCevirme(lx, -ly, True)  
-	solHiz = motorlar.kumandaVerisiniMotorVerilerineCevirme(lx, -ly, False)  
+	sagHiz, solHiz = motorlar.kumandaVerisiniMotorVerilerineCevirme(lx, ly)  
   
 	motorlar.hizlariAyarla(sagHiz, solHiz)  
 ```  
-Yukarıdaki kod motorlar ve kumanda objelerini başlatır ve bir while döngüsünün içine girer. Döngüdeyken  ```kumandaVerisiniMotorVerilerineCevirme()``` metodu motorların hız değerlerini bulmak için kullanılır. y değerinin negatif olması, özellikle PS3 kumandalarında joystickteki ileri yönünün negatif değerler vermesinden dolayıdır.  
+Yukarıdaki kod motorlar ve kumanda objelerini başlatır ve bir while döngüsünün içine girer. Döngüdeyken  ```kumandaVerisiniMotorVerilerineCevirme()``` metodu motorların hız değerlerini bulmak için kullanılır. 
   
 ServoKontrol  
 -  
