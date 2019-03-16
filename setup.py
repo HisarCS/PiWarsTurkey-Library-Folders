@@ -21,7 +21,6 @@ setup(
     install_requires=[
         'picamera',
         'pygame',
-        'pololu_drv8835_rpi',
         'RPi.GPIO',
         'wiringpi',
         'opencv-contrib-python'

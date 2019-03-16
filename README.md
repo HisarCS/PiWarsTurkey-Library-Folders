@@ -7,12 +7,7 @@ Bu python kütüphanesi, PiWars Türkiye 2019 katılımcılarının HisarCS tara
   
 PiWarsTurkiyeRobotKiti2019'u indirmek için [pip](https://pip.pypa.io/en/stable/) paketleme yöneticisini kullanın.  
   
-  Fakat bu kütüphanenin yazılımda başka kütüphaneler de kullanıldığından, bu kütüphaneyi indirmeden önce diğer kütüphaneleri indirmeniz gerekir. Bunlar ise:
-  
-  * picamera
-  * pygame
-  
-  
+
 ``` 
 $ sudo pip install PiWarsTurkiyeRobotKiti2019  
 ```  
