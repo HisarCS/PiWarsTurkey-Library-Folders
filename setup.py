@@ -3,9 +3,14 @@ from setuptools import setup
 with open("README.md", "r") as fh:
       long_description = fh.read()
 
+print("PiWarsTurkiyeRobotKiti2019 kutuphanesine hosgeldiniz!")
+print("gerekli dokumantosyonu https://github.com/HisarCS/PiWarsTurkey-Library-Folders adresinden bulabilirsiniz.")
+print("Herhangi bir sorun cikarsa once yukaridaki dokumantosyona goz atmanizi, eger sorun hala devam ederse bize ulasmaktan cekinmeyin.")
+print("Bu kutuphaneyi indirirken de kullanirken de programin sudo ile calistigindan emin olun.")
+
 setup(
     name = "PiWarsTurkiyeRobotKiti2019",
-    version = "1.1.3",
+    version = "1.1.4",
     author = "Yasar İdikut, Sarp Yoel Kastro",
     author_email = "yasar.idikut@hisarschool.k12.tr, sarp.kastro@hisarschool.k12.tr",
     description = "Library that makes use of sensors, motors, and servos in the PiWars Turkey robot kit by HisarCS",
@@ -19,7 +24,7 @@ setup(
         'pololu_drv8835_rpi',
         'RPi.GPIO',
         'wiringpi',
-    ],
-    dependency_links=['https://github.com/pololu/drv8835-motor-driver-rpi/tarball/master/']
+        'opencv-contrib-python'
+    ]
 
 )
