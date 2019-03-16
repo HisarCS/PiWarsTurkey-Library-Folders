@@ -19,6 +19,7 @@ setup(
         'pololu_drv8835_rpi',
         'RPi.GPIO',
         'wiringpi',
-    ]
+    ],
+    dependency_links=['https://github.com/pololu/drv8835-motor-driver-rpi/tarball/master/']
 
 )
