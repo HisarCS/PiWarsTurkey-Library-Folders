@@ -65,7 +65,6 @@ Ana threadi yavaşlatmadan bir pencere açmak için  ``` __kareyiGostermeyiGunce
 - Örnek Kullanım  
 ```python  
 from PiWarsTurkiyeRobotKiti2019 import HizlandirilmisPiKamera  
-import imutils
 from time import sleep
 
 camera = HizlandirilmisPiKamera()
