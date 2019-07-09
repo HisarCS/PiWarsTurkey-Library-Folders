@@ -14,6 +14,7 @@ $ sudo pip install PiWarsTurkiyeRobotKiti2019
   
 Alternatif olarak Github'dan indirmek de mümkün.  
 ```bash git clone https://github.com/HisarCS/PiWarsTurkey-Library-Folders.git  
+$ git clone https://github.com/HisarCS/PiWarsTurkey-Library-Folders.git
 $ cd PiWarsTurkey-Library-Folders  
 $ sudo python setup.py install  
 ```  
