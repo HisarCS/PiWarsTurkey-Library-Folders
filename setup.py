@@ -24,10 +24,15 @@ setup(
     long_description_content_type="text/markdown",
     classifiers=["Development Status :: 4 - Beta"],
     install_requires=[
-        'picamera',
-        'pygame',
-        'RPi.GPIO',
-        'wiringpi',
-    ]
+#        'picamera',
+#        'pygame',
+#        'RPi.GPIO',
+#        'wiringpi',
+	'Click'
+    ],
+    entry_points='''
+        [console_scripts]
+        piwarstr=CommandLineTools:main
+    '''
 
 )
